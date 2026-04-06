@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: edunavigator_db
+    environment:
+      MYSQL_ROOT_PASSWORD: 3333
+      MYSQL_DATABASE: edunavigator
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+    container_name: edunavigator_backend
+    ports:
+      - "8000:80"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=3333
+      - DB_NAME=edunavigator
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: edunavigator_frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
