@@ -531,7 +531,7 @@ const styles = {
     },
     actionEdit: {
         padding: '0.5rem',
-        color: 'var(--text-light)',
+        color: 'var(--primary-color)',
         backgroundColor: 'var(--white)',
         borderRadius: 'var(--radius-md)',
     },
