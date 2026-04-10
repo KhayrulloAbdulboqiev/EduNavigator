@@ -1,48 +1,48 @@
 import React from 'react';
 
-const Library = () => {
-    const books = [
+const Certificate = () => {
+    const certificates = [
         {
-            title: "Gray's Anatomy",
-            description: "Inson anatomiyasi bo'yicha eng nufuzli darslik. Tibbiyot talabalari uchun asosiy manba.",
-            image: "https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781667204734/grays-anatomy-9781667204734_hr.jpg",
-            link: "https://books.google.co.uz/books?id=qlgAEAAAQBAJ&printsec=copyright&redir_esc=y#v=onepage&q&f=false"
+            title: "USMLE",
+            description: "United States Medical Licensing Examination",
+            image: "https://www.prometric.com/images/Client-logos/_max500/99630/USMLE_Vertical-Logo_FullColor_RGB_R.webp",
+            link: "https://en.wikipedia.org/wiki/United_States_Medical_Licensing_Examination"
         },
         {
-            title: "Robbins Basic Pathology",
-            description: "Kasalliklar patologiyasi va ularning kelib chiqish mexanizmlari haqida batafsil ma'lumot.",
-            image: "https://m.media-amazon.com/images/I/61qF3kO1DfL._AC_UF1000,1000_QL80_.jpg",
-            link: "https://books.google.co.in/books?id=jheBzf17C7YC&printsec=copyright#v=onepage&q&f=false"
+            title: "PLAB",
+            description: "Professional and Linguistic Assessments Board",
+            image: "https://media.licdn.com/dms/image/v2/D5612AQFFPq1KUsag2g/article-cover_image-shrink_720_1280/article-cover_image-shrink_720_1280/0/1679478756399?e=2147483647&v=beta&t=VZGK47CyYClN4MhqsyJYi8dA8pGkdO38NhVaDk4s8Oo",
+            link: "https://www.gmc-uk.org/registration-and-licensing/join-our-registers/plab"
         },
         {
-            title: "Guyton and Hall Physiology",
-            description: "Inson fiziologiyasi bo'yicha dunyodagi eng mashhur va ishonchli qo'llanma.",
-            image: "https://secure-ecsd.elsevier.com/covers/80/Tango2/original/9780443111013.jpg",
-            link: "https://books.google.co.uz/books?id=v981DwAAQBAJ&printsec=copyright&redir_esc=y#v=onepage&q&f=false"
+            title: "MCCQE",
+            description: "Medical Council of Canada Qualifying Examination",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY_8-c0TnEp1HhBwtb6tVHqzkRR9NMlIXBVA&s",
+            link: "https://www.mcc.ca/"
         },
         {
-            title: "How Doctors Think",
-            description: "Doktorlar qanday fikrlaydi?",
-            image: "https://m.media-amazon.com/images/I/81wXcP52kfL.jpg_BO30,255,255,255_UF750,750_SR1910,1000,0,C_QL100_.jpg",
-            link: "https://books.google.co.uz/books/about/How_Doctors_Think.html?id=hoNQPgAACAAJ&redir_esc=y"
+            title: "AMC",
+            description: "Australian Medical Council",
+            image: "https://medbots.in/uploads/exams/exam_images/law_(33).jpg",
+            link: "https://www.amc.org.au/"
         }
     ];
 
     return (
         <div style={libStyles.wrapper}>
             <div style={libStyles.container}>
-                <h1 style={libStyles.pageTitle}>Kutubxona</h1>
+                <h1 style={libStyles.pageTitle}>International Certificates</h1>
                 <div style={libStyles.grid}>
-                    {books.map((book, index) => (
+                    {certificates.map((certificate, index) => (
                         <div key={index} style={libStyles.card}>
                             <div style={libStyles.imageBox}>
-                                <img src={book.image} alt={book.title} style={libStyles.img} />
+                                <img src={certificate.image} alt={certificate.title} style={libStyles.img} />
                             </div>
                             <div style={libStyles.content}>
-                                <h3 style={libStyles.titleText}>{book.title}</h3>
-                                <p style={libStyles.descText}>{book.description}</p>
-                                <a href={book.link} className="inline-block bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors w-fit">
-                                    PDF ko'rish →
+                                <h3 style={libStyles.titleText}>{certificate.title}</h3>
+                                <p style={libStyles.descText}>{certificate.description}</p>
+                                <a href={certificate.link} className="inline-block bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors w-fit">
+                                    Ro'yxatdan o'tish →
                                 </a>
                             </div>
                         </div>
@@ -118,4 +118,4 @@ const libStyles = {
     }
 };
 
-export default Library;
+export default Certificate;

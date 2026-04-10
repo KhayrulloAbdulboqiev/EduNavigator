@@ -12,6 +12,7 @@ import Navigator from './pages/Navigator';
 import OnlineEducation from './pages/OnlineEducation';
 import Library from './pages/Library';
 import Rating from './pages/Rating';
+import Certificate from './pages/Certificate';
 
 // Placeholder Pages for all menu items
 const PlaceholderPage = ({ title }) => (
@@ -41,7 +42,7 @@ function App() {
         <Route path="/navigator" element={<ProtectedRoute><MainLayout><Navigator /></MainLayout></ProtectedRoute>} />
         <Route path="/rating" element={<ProtectedRoute><MainLayout><Rating /></MainLayout></ProtectedRoute>} />
         <Route path="/library" element={<ProtectedRoute><MainLayout><Library /></MainLayout></ProtectedRoute>} />
-        <Route path="/certificates" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Xalqaro sertifikatlar" /></MainLayout></ProtectedRoute>} />
+        <Route path="/certificates" element={<ProtectedRoute><MainLayout><Certificate /></MainLayout></ProtectedRoute>} />
         <Route path="/market" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Market" /></MainLayout></ProtectedRoute>} />
         <Route path="/share" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Do'stlarga ulashish" /></MainLayout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} />

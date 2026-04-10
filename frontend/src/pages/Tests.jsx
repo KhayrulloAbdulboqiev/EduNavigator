@@ -83,7 +83,7 @@ const Tests = () => {
                         {selectedSubject ? `${selectedSubject.name} - Testlar` : 'Testlar Markazi'}
                     </h2>
                     <p style={{ color: 'var(--text-light)', marginTop: '0.25rem' }}>
-                        {selectedSubject ? 'Mavjud testlardan birini tanlang va bilimingizni sinang.' : 'Fanlardan birini tanlang va testlarni boshlang.'}
+                        {selectedSubject ? 'Mavjud testlardan birini tanlang va bilimingizni sinang!' : 'Fanlardan birini tanlang va testlarni boshlang!'}
                     </p>
                 </div>
 

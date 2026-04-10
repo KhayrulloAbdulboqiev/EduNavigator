@@ -36,7 +36,7 @@ const OnlineEducation = () => {
                                 <h3 style={libStyles.titleText}>{video.title}</h3>
                                 <p style={libStyles.descText}>{video.description}</p>
                                 <a href={video.link} className="inline-block bg-blue-700 hover:bg-blue-800 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition-colors w-fit">
-                                    Find out more →
+                                    Tomosha qilish →
                                 </a>
                             </div>
                         </div>
