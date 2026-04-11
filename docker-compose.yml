@@ -8,8 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: 3333
       MYSQL_DATABASE: edunavigator
-    # ports:
-    #   - "3306:3306" # Tashqaridan kirishni yopish xavfsizroq. Backend ichki tarmoqdan baribir ulana oladi.
     volumes:
       - db_data:/var/lib/mysql
 
@@ -19,7 +17,7 @@ services:
     container_name: edunavigator_backend
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "8000:80" 
     environment:
       - DB_HOST=db
       - DB_USER=root
@@ -34,7 +32,7 @@ services:
     container_name: edunavigator_frontend
     restart: unless-stopped
     ports:
-      - "80:80" # Saytga to'g'ridan-to'g'ri IP yoki domen orqali port yozmasdan kirish uchun
+      - "80:80" 
     depends_on:
       - backend
 
