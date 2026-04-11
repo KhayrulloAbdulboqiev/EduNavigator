@@ -21,13 +21,6 @@ try {
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     } 
     elseif ($method === 'POST') {
-        // Admin only: Create a new test
-        if ($user_role !== 'admin') {
-            http_response_code(403);
-            echo json_encode(["status" => "error", "message" => "Unauthorized. Admin access required."]);
-            exit;
-        }
-
         $data = json_decode(file_get_contents("php://input"), true);
         
         if (!isset($data['subject_id'], $data['title'], $data['time_limit'])) {

@@ -30,13 +30,6 @@ try {
         echo json_encode($questions);
     } 
     elseif ($method === 'POST') {
-        // Admin only: Add a question with options
-        if ($user_role !== 'admin') {
-            http_response_code(403);
-            echo json_encode(["status" => "error", "message" => "Unauthorized. Admin access required."]);
-            exit;
-        }
-
         $data = json_decode(file_get_contents("php://input"), true);
         
         if (!isset($data['test_id'], $data['question_text'], $data['options'])) {
