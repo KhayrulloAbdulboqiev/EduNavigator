@@ -90,7 +90,7 @@ const Tests = () => {
 
                 <button
                     className="btn btn-primary"
-                    onClick={() => setIsAdminMode(true)}
+                    onClick={() => setIsAdminMode(false)}
                     style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
                     <Plus size={20} />
