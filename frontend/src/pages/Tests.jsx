@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { BookOpen, Plus, Clock, ChevronRight } from 'lucide-react';
 import TestInterface from '../components/TestInterface';
-import AdminTestManager from './AdminTestManager';
+import CreateTest from './CreateTest';
 
 const Tests = () => {
     const { user } = useContext(AuthContext);
@@ -10,7 +10,7 @@ const Tests = () => {
     const [tests, setTests] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [activeTest, setActiveTest] = useState(null);
-    const [isAdminMode, setIsAdminMode] = useState(false);
+    const [isCreateMode, setIsCreateMode] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -52,12 +52,11 @@ const Tests = () => {
         }
     };
 
-    if (isAdminMode) {
+    if (isCreateMode) {
         return (
-            <AdminTestManager
-                isAdmin={user?.role === 'admin'}
+            <CreateTest
                 onClose={() => {
-                    setIsAdminMode(false);
+                    setIsCreateMode(false);
                     fetchSubjects();
                 }}
             />
@@ -90,7 +89,7 @@ const Tests = () => {
 
                 <button
                     className="btn btn-primary"
-                    onClick={() => setIsAdminMode(false)}
+                    onClick={() => setIsCreateMode(true)}
                     style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
                     <Plus size={20} />

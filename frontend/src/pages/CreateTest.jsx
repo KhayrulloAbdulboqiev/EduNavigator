@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Save, ArrowLeft, Check, AlertCircle } from 'lucide-react';
 
-const AdminTestManager = ({ onClose, isAdmin }) => {
+const CreateTest = ({ onClose }) => {
     const [subjects, setSubjects] = useState([]);
     const [testData, setTestData] = useState({
         subject_id: '', title: '', description: '', time_limit: 30
@@ -237,4 +237,4 @@ const AdminTestManager = ({ onClose, isAdmin }) => {
     );
 };
 
-export default AdminTestManager;
+export default CreateTest;
