@@ -55,6 +55,7 @@ const Tests = () => {
     if (isAdminMode) {
         return (
             <AdminTestManager
+                isAdmin={user?.role === 'admin'}
                 onClose={() => {
                     setIsAdminMode(false);
                     fetchSubjects();
@@ -87,16 +88,14 @@ const Tests = () => {
                     </p>
                 </div>
 
-                {user?.role === 'admin' && (
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => setIsAdminMode(true)}
-                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-                    >
-                        <Plus size={20} />
-                        Test Qo'shish
-                    </button>
-                )}
+                <button
+                    className="btn btn-primary"
+                    onClick={() => setIsAdminMode(true)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                >
+                    <Plus size={20} />
+                    Test Qo'shish
+                </button>
             </div>
 
             {error && (

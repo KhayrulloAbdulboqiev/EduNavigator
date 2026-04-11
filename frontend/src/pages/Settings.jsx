@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, Plus, Trash2, Edit3, Image as ImageIcon, Video, Clock, BookOpen, Send, X } from 'lucide-react';
+import { Upload, Plus, Trash2, Edit3, Image as ImageIcon, Video, Clock, BookOpen, Send, X, ShieldAlert, Eye } from 'lucide-react';
 
 const Settings = () => {
     const [isAdmin, setIsAdmin] = useState(true);
@@ -35,12 +35,11 @@ const Settings = () => {
     const toggleRole = () => setIsAdmin(!isAdmin);
 
     useEffect(() => {
-        if (isAdmin) {
-            fetchSubjects();
-            fetchTimeSlots();
-            fetchPosts();
-        }
-    }, [isAdmin]);
+        // Fetch for all users so they can see the read-only view
+        fetchSubjects();
+        fetchTimeSlots();
+        fetchPosts();
+    }, []); // Run once on mount
 
     // ===== POSTS =====
     const fetchPosts = async () => {
@@ -213,215 +212,229 @@ const Settings = () => {
                 </div>
             </div>
 
-            {/* Admin Section */}
-            {isAdmin && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={styles.adminSection}>
-                    <div style={styles.adminHeader}>
-                        <h3 style={styles.sectionTitle}>Admin Boshqaruvi</h3>
-                        <span style={styles.badge}>Restricted Access</span>
-                    </div>
+            {/* System Data Section (Visible to all, read-only for non-admins) */}
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={styles.adminSection}>
+                <div style={styles.adminHeader}>
+                    <h3 style={styles.sectionTitle}>Tizim Ma'lumotlari</h3>
+                    {isAdmin ? (
+                        <span style={styles.badgeAdmin}><ShieldAlert size={14} style={{ marginRight: 4 }} /> Admin</span>
+                    ) : (
+                        <span style={styles.badgeUser}><Eye size={14} style={{ marginRight: 4 }} /> Faqat o'qish uchun</span>
+                    )}
+                </div>
 
-                    <div style={styles.card}>
-                        {/* ===== MANAGE NEWS FEED ===== */}
-                        <div style={styles.adminHeaderRow}>
-                            <h4 style={styles.settingName}>Yangiliklar lentasini boshqarish</h4>
+                <div style={styles.card}>
+                    {/* ===== MANAGE NEWS FEED ===== */}
+                    <div style={styles.adminHeaderRow}>
+                        <h4 style={styles.settingName}>Yangiliklar lentasi</h4>
+                        {isAdmin && (
                             <button style={styles.btnPrimary} onClick={() => setIsAddingPost(!isAddingPost)}>
                                 {isAddingPost ? <><X size={18} /> Bekor qilish</> : <><Plus size={18} /> Yangi post</>}
                             </button>
-                        </div>
+                        )}
+                    </div>
 
-                        {isAddingPost && (
-                            <form onSubmit={handleAddPost} style={styles.postForm}>
-                                <textarea
-                                    value={postContent}
-                                    onChange={e => setPostContent(e.target.value)}
-                                    style={styles.textarea}
-                                    placeholder="Post matni (ixtiyoriy)..."
-                                    rows={3}
-                                />
+                    {isAdmin && isAddingPost && (
+                        <form onSubmit={handleAddPost} style={styles.postForm}>
+                            <textarea
+                                value={postContent}
+                                onChange={e => setPostContent(e.target.value)}
+                                style={styles.textarea}
+                                placeholder="Post matni (ixtiyoriy)..."
+                                rows={3}
+                            />
 
-                                {/* Media Preview */}
-                                {mediaPreview && (
-                                    <div style={styles.previewBox}>
-                                        {mediaType === 'image' ? (
-                                            <img src={mediaPreview} alt="Preview" style={styles.previewMedia} />
-                                        ) : (
-                                            <video src={mediaPreview} controls style={styles.previewMedia} />
-                                        )}
-                                        <button
-                                            type="button"
-                                            style={styles.removeMediaBtn}
-                                            onClick={() => { setMediaFile(null); setMediaPreview(null); setMediaType('none'); }}
-                                        >
-                                            <X size={16} />
-                                        </button>
-                                    </div>
-                                )}
-
-                                <div style={styles.postFormActions}>
-                                    <div style={styles.uploadOptions}>
-                                        <button
-                                            type="button"
-                                            style={styles.uploadBtn}
-                                            onClick={() => fileInputRef.current?.click()}
-                                        >
-                                            <ImageIcon size={20} color="var(--primary-color)" />
-                                            <span>Rasm / Video</span>
-                                        </button>
-                                        <input
-                                            ref={fileInputRef}
-                                            type="file"
-                                            accept="image/*,video/*"
-                                            style={{ display: 'none' }}
-                                            onChange={handleMediaChange}
-                                        />
-                                    </div>
-                                    <button type="submit" style={styles.btnPrimary} disabled={submittingPost}>
-                                        <Send size={16} />
-                                        {submittingPost ? 'Yuklanmoqda...' : 'Joylash'}
+                            {/* Media Preview */}
+                            {mediaPreview && (
+                                <div style={styles.previewBox}>
+                                    {mediaType === 'image' ? (
+                                        <img src={mediaPreview} alt="Preview" style={styles.previewMedia} />
+                                    ) : (
+                                        <video src={mediaPreview} controls style={styles.previewMedia} />
+                                    )}
+                                    <button
+                                        type="button"
+                                        style={styles.removeMediaBtn}
+                                        onClick={() => { setMediaFile(null); setMediaPreview(null); setMediaType('none'); }}
+                                    >
+                                        <X size={16} />
                                     </button>
                                 </div>
-                            </form>
-                        )}
+                            )}
 
-                        {/* Posts list */}
-                        <div style={styles.postList}>
-                            {loadingPosts ? (
-                                <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
-                            ) : posts.length === 0 ? (
-                                <div style={styles.listPlaceholder}>Hali postlar yo'q.</div>
-                            ) : posts.map(post => (
-                                <div key={post.id} style={styles.postItem}>
-                                    <div style={styles.postInfo}>
-                                        <div style={{ ...styles.postMiniImg, backgroundColor: post.media_type === 'video' ? '#e0e7ff' : '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            {post.media_type === 'video' ? <Video size={18} color="#4f46e5" /> : <ImageIcon size={18} color="#16a34a" />}
-                                        </div>
-                                        <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--text-dark)' }}>
-                                            {post.content ? post.content.substring(0, 50) + (post.content.length > 50 ? '…' : '') : '(Media post)'}
-                                        </span>
+                            <div style={styles.postFormActions}>
+                                <div style={styles.uploadOptions}>
+                                    <button
+                                        type="button"
+                                        style={styles.uploadBtn}
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <ImageIcon size={20} color="var(--primary-color)" />
+                                        <span>Rasm / Video</span>
+                                    </button>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*,video/*"
+                                        style={{ display: 'none' }}
+                                        onChange={handleMediaChange}
+                                    />
+                                </div>
+                                <button type="submit" style={styles.btnPrimary} disabled={submittingPost}>
+                                    <Send size={16} />
+                                    {submittingPost ? 'Yuklanmoqda...' : 'Joylash'}
+                                </button>
+                            </div>
+                        </form>
+                    )}
+
+                    {/* Posts list */}
+                    <div style={styles.postList}>
+                        {loadingPosts ? (
+                            <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
+                        ) : posts.length === 0 ? (
+                            <div style={styles.listPlaceholder}>Hali postlar yo'q.</div>
+                        ) : posts.map(post => (
+                            <div key={post.id} style={styles.postItem}>
+                                <div style={styles.postInfo}>
+                                    <div style={{ ...styles.postMiniImg, backgroundColor: post.media_type === 'video' ? '#e0e7ff' : '#f0fdf4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        {post.media_type === 'video' ? <Video size={18} color="#4f46e5" /> : <ImageIcon size={18} color="#16a34a" />}
                                     </div>
-                                    <div style={styles.postActions}>
-                                        <span style={{ fontSize: '0.78rem', color: 'var(--text-light)' }}>❤ {post.like_count || 0}</span>
+                                    <span style={{ fontWeight: 500, fontSize: '0.9rem', color: 'var(--text-dark)' }}>
+                                        {post.content ? post.content.substring(0, 50) + (post.content.length > 50 ? '…' : '') : '(Media post)'}
+                                    </span>
+                                </div>
+                                <div style={styles.postActions}>
+                                    <span style={{ fontSize: '0.78rem', color: 'var(--text-light)' }}>❤ {post.like_count || 0}</span>
+                                    {isAdmin && (
                                         <button style={styles.actionDelete} onClick={() => handleDeletePost(post.id)}>
                                             <Trash2 size={16} />
                                         </button>
-                                    </div>
+                                    )}
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
+                    </div>
 
-                        {/* ===== MANAGE SUBJECTS ===== */}
-                        <div style={{ ...styles.adminHeaderRow, marginTop: '1rem', borderTop: '2px solid var(--border-color)' }}>
-                            <h4 style={styles.settingName}>Fanlarni boshqarish</h4>
+                    {/* ===== MANAGE SUBJECTS ===== */}
+                    <div style={{ ...styles.adminHeaderRow, marginTop: '1rem', borderTop: '2px solid var(--border-color)' }}>
+                        <h4 style={styles.settingName}>Fanlar ro'yxati</h4>
+                        {isAdmin && (
                             <button style={styles.btnPrimary} onClick={() => setIsAddingSubject(!isAddingSubject)}>
                                 <Plus size={18} /> {isAddingSubject ? 'Bekor qilish' : 'Fan qo\'shish'}
                             </button>
-                        </div>
+                        )}
+                    </div>
 
-                        {isAddingSubject && (
-                            <form onSubmit={handleAddSubject} style={{ padding: '1.25rem', backgroundColor: 'var(--bg-color)', borderBottom: '1px solid var(--border-color)' }}>
-                                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
-                                    <div style={{ flex: 1, minWidth: '160px' }}>
-                                        <label style={styles.label}>Fan nomi</label>
-                                        <input type="text" value={newSubjectName} onChange={e => setNewSubjectName(e.target.value)} style={styles.inputField} placeholder="masalan: Matematika" required />
+                    {isAdmin && isAddingSubject && (
+                        <form onSubmit={handleAddSubject} style={{ padding: '1.25rem', backgroundColor: 'var(--bg-color)', borderBottom: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                                <div style={{ flex: 1, minWidth: '160px' }}>
+                                    <label style={styles.label}>Fan nomi</label>
+                                    <input type="text" value={newSubjectName} onChange={e => setNewSubjectName(e.target.value)} style={styles.inputField} placeholder="masalan: Matematika" required />
+                                </div>
+                                <div>
+                                    <label style={styles.label}>Rang</label>
+                                    <input type="color" value={newSubjectColor} onChange={e => setNewSubjectColor(e.target.value)} style={{ ...styles.inputField, padding: '0.2rem', height: '42px', width: '70px', cursor: 'pointer' }} />
+                                </div>
+                                <button type="submit" style={styles.btnPrimary}>Saqlash</button>
+                            </div>
+                        </form>
+                    )}
+
+                    <div style={styles.postList}>
+                        {loadingSubjects ? (
+                            <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
+                        ) : subjects.length === 0 ? (
+                            <div style={styles.listPlaceholder}>Fanlar topilmadi.</div>
+                        ) : subjects.map(subject => (
+                            <div key={subject.id} style={styles.postItem}>
+                                <div style={styles.postInfo}>
+                                    <div style={{ ...styles.postMiniImg, backgroundColor: subject.color_code || '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <BookOpen size={18} color="#fff" />
                                     </div>
                                     <div>
-                                        <label style={styles.label}>Rang</label>
-                                        <input type="color" value={newSubjectColor} onChange={e => setNewSubjectColor(e.target.value)} style={{ ...styles.inputField, padding: '0.2rem', height: '42px', width: '70px', cursor: 'pointer' }} />
+                                        <div style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{subject.name}</div>
                                     </div>
-                                    <button type="submit" style={styles.btnPrimary}>Saqlash</button>
                                 </div>
-                            </form>
-                        )}
-
-                        <div style={styles.postList}>
-                            {loadingSubjects ? (
-                                <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
-                            ) : subjects.length === 0 ? (
-                                <div style={styles.listPlaceholder}>Fanlar topilmadi.</div>
-                            ) : subjects.map(subject => (
-                                <div key={subject.id} style={styles.postItem}>
-                                    <div style={styles.postInfo}>
-                                        <div style={{ ...styles.postMiniImg, backgroundColor: subject.color_code || '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <BookOpen size={18} color="#fff" />
-                                        </div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{subject.name}</div>
-                                        </div>
-                                    </div>
+                                {isAdmin && (
                                     <div style={styles.postActions}>
                                         <button style={styles.actionDelete} onClick={() => handleDeleteSubject(subject.id)}>
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
 
-                        {/* ===== MANAGE TIME SLOTS ===== */}
-                        <div style={{ ...styles.adminHeaderRow, marginTop: '1rem', borderTop: '2px solid var(--border-color)' }}>
-                            <h4 style={styles.settingName}>Vaqt slotlarini boshqarish</h4>
+                    {/* ===== MANAGE TIME SLOTS ===== */}
+                    <div style={{ ...styles.adminHeaderRow, marginTop: '1rem', borderTop: '2px solid var(--border-color)' }}>
+                        <h4 style={styles.settingName}>Vaqt slotlari</h4>
+                        {isAdmin && (
                             <button style={styles.btnPrimary} onClick={() => setIsAddingSlot(!isAddingSlot)}>
                                 <Plus size={18} /> {isAddingSlot ? 'Bekor qilish' : 'Slot qo\'shish'}
                             </button>
-                        </div>
-
-                        {isAddingSlot && (
-                            <form onSubmit={handleAddTimeSlot} style={{ padding: '1.25rem', backgroundColor: 'var(--bg-color)', borderBottom: '1px solid var(--border-color)' }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 0.5fr auto', gap: '1rem', alignItems: 'flex-end' }}>
-                                    <div>
-                                        <label style={styles.label}>Slot nomi</label>
-                                        <input type="text" value={newSlotName} onChange={e => setNewSlotName(e.target.value)} style={styles.inputField} placeholder="masalan: 1-dars" required />
-                                    </div>
-                                    <div>
-                                        <label style={styles.label}>Boshlash</label>
-                                        <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} style={styles.inputField} required />
-                                    </div>
-                                    <div>
-                                        <label style={styles.label}>Tugash</label>
-                                        <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} style={styles.inputField} required />
-                                    </div>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <label style={styles.label}>Faol</label>
-                                        <input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
-                                    </div>
-                                    <button type="submit" style={styles.btnPrimary}>Saqlash</button>
-                                </div>
-                            </form>
                         )}
+                    </div>
 
-                        <div style={styles.postList}>
-                            {loadingSlots ? (
-                                <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
-                            ) : timeSlots.length === 0 ? (
-                                <div style={styles.listPlaceholder}>Vaqt slotlari topilmadi.</div>
-                            ) : timeSlots.map(slot => (
-                                <div key={slot.id} style={styles.postItem}>
-                                    <div style={styles.postInfo}>
-                                        <div style={{ ...styles.postMiniImg, backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <Clock size={18} color="#64748b" />
-                                        </div>
-                                        <div>
-                                            <div style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{slot.name}</div>
-                                            <div style={{ fontSize: '0.82rem', color: 'var(--text-light)' }}>
-                                                {slot.start_time?.substring(0, 5)} - {slot.end_time?.substring(0, 5)}
-                                            </div>
+                    {isAdmin && isAddingSlot && (
+                        <form onSubmit={handleAddTimeSlot} style={{ padding: '1.25rem', backgroundColor: 'var(--bg-color)', borderBottom: '1px solid var(--border-color)' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 0.5fr auto', gap: '1rem', alignItems: 'flex-end' }}>
+                                <div>
+                                    <label style={styles.label}>Slot nomi</label>
+                                    <input type="text" value={newSlotName} onChange={e => setNewSlotName(e.target.value)} style={styles.inputField} placeholder="masalan: 1-dars" required />
+                                </div>
+                                <div>
+                                    <label style={styles.label}>Boshlash</label>
+                                    <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} style={styles.inputField} required />
+                                </div>
+                                <div>
+                                    <label style={styles.label}>Tugash</label>
+                                    <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} style={styles.inputField} required />
+                                </div>
+                                <div style={{ textAlign: 'center' }}>
+                                    <label style={styles.label}>Faol</label>
+                                    <input type="checkbox" checked={isActive} onChange={e => setIsActive(e.target.checked)} style={{ width: '20px', height: '20px', cursor: 'pointer' }} />
+                                </div>
+                                <button type="submit" style={styles.btnPrimary}>Saqlash</button>
+                            </div>
+                        </form>
+                    )}
+
+                    <div style={styles.postList}>
+                        {loadingSlots ? (
+                            <div style={styles.listPlaceholder}>Yuklanmoqda...</div>
+                        ) : timeSlots.length === 0 ? (
+                            <div style={styles.listPlaceholder}>Vaqt slotlari topilmadi.</div>
+                        ) : timeSlots.map(slot => (
+                            <div key={slot.id} style={styles.postItem}>
+                                <div style={styles.postInfo}>
+                                    <div style={{ ...styles.postMiniImg, backgroundColor: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <Clock size={18} color="#64748b" />
+                                    </div>
+                                    <div>
+                                        <div style={{ fontWeight: 600, color: 'var(--text-dark)' }}>{slot.name}</div>
+                                        <div style={{ fontSize: '0.82rem', color: 'var(--text-light)' }}>
+                                            {slot.start_time?.substring(0, 5)} - {slot.end_time?.substring(0, 5)}
                                         </div>
                                     </div>
-                                    <div style={styles.postActions}>
-                                        <span style={{ ...styles.badge, backgroundColor: slot.is_active ? '#dcfce7' : '#f3f4f6', color: slot.is_active ? '#16a34a' : '#6b7280', marginRight: '8px' }}>
-                                            {slot.is_active ? 'Faol' : 'Nofaol'}
-                                        </span>
+                                </div>
+                                <div style={styles.postActions}>
+                                    <span style={{ ...styles.badge, backgroundColor: slot.is_active ? '#dcfce7' : '#f3f4f6', color: slot.is_active ? '#16a34a' : '#6b7280', marginRight: isAdmin ? '8px' : 0 }}>
+                                        {slot.is_active ? 'Faol' : 'Nofaol'}
+                                    </span>
+                                    {isAdmin && (
                                         <button style={styles.actionDelete} onClick={() => handleDeleteSlot(slot.id)}>
                                             <Trash2 size={16} />
                                         </button>
-                                    </div>
+                                    )}
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ))}
                     </div>
-                </motion.div>
-            )}
+                </div>
+            </motion.div>
 
             <style>{`
                 .switch input { opacity: 0; width: 0; height: 0; }
@@ -450,7 +463,9 @@ const styles = {
     switchLabel: { display: 'inline-block' },
     adminSection: { marginTop: '1.5rem' },
     adminHeader: { display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' },
-    badge: { backgroundColor: '#fee2e2', color: '#ef4444', padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' },
+    badge: { padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' },
+    badgeAdmin: { display: 'flex', alignItems: 'center', backgroundColor: '#fee2e2', color: '#ef4444', padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' },
+    badgeUser: { display: 'flex', alignItems: 'center', backgroundColor: '#e0e7ff', color: '#4f46e5', padding: '0.25rem 0.75rem', borderRadius: 'var(--radius-xl)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' },
     adminHeaderRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)' },
     btnPrimary: { display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'var(--primary-color)', color: 'var(--white)', padding: '0.5rem 1rem', borderRadius: 'var(--radius-md)', fontWeight: 600, border: 'none', cursor: 'pointer' },
     postForm: { padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border-color)', backgroundColor: 'var(--bg-color)', display: 'flex', flexDirection: 'column', gap: '0.75rem' },
