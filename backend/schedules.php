@@ -19,11 +19,11 @@ try {
         echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     elseif ($method === 'POST') {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            http_response_code(403);
-            echo json_encode(['error' => 'Unauthorized: Admin access required']);
-            exit();
-        }
+        // if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        //     http_response_code(403);
+        //     echo json_encode(['error' => 'Unauthorized: Admin access required']);
+        //     exit();
+        // }
         $data = json_decode(file_get_contents("php://input"), true);
         
         $stmt = $pdo->prepare("INSERT INTO schedule (scheduled_date, subject_id, time_slot_id, topic_description) VALUES (?, ?, ?, ?)");
@@ -37,11 +37,11 @@ try {
         echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
     }
     elseif ($method === 'DELETE') {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-            http_response_code(403);
-            echo json_encode(['error' => 'Unauthorized: Admin access required']);
-            exit();
-        }
+        // if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        //     http_response_code(403);
+        //     echo json_encode(['error' => 'Unauthorized: Admin access required']);
+        //     exit();
+        // }
         $id = $_GET['id'] ?? null;
         if ($id) {
             $stmt = $pdo->prepare("DELETE FROM schedule WHERE id = ?");

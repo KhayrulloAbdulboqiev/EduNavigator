@@ -41,11 +41,11 @@ try {
     }
     elseif ($method === 'POST') {
         // Admin only
-        if ($user_role !== 'admin') {
-            http_response_code(403);
-            echo json_encode(['error' => 'Admin access required.']);
-            exit;
-        }
+        // if ($user_role !== 'admin') {
+        //     http_response_code(403);
+        //     echo json_encode(['error' => 'Admin access required.']);
+        //     exit;
+        // }
 
         $content = $_POST['content'] ?? '';
         $media_url = null;
@@ -92,12 +92,12 @@ try {
 
         echo json_encode(['success' => true, 'id' => $pdo->lastInsertId()]);
     }
-    elseif ($method === 'DELETE') {
-        if ($user_role !== 'admin') {
-            http_response_code(403);
-            echo json_encode(['error' => 'Admin access required.']);
-            exit;
-        }
+    // elseif ($method === 'DELETE') {
+    //     if ($user_role !== 'admin') {
+    //         http_response_code(403);
+    //         echo json_encode(['error' => 'Admin access required.']);
+    //         exit;
+    //     }
 
         $id = $_GET['id'] ?? null;
         if (!$id) {
@@ -123,7 +123,7 @@ try {
 
         echo json_encode(['success' => true]);
     }
-} catch (PDOException $e) {
+    catch (PDOException $e) {
     http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
