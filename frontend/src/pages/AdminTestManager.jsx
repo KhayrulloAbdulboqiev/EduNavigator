@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Save, ArrowLeft, Check, AlertCircle } from 'lucide-react';
 
-const AdminTestManager = ({ onClose }) => {
+const AdminTestManager = ({ onClose, isAdmin }) => {
     const [subjects, setSubjects] = useState([]);
     const [testData, setTestData] = useState({
         subject_id: '', title: '', description: '', time_limit: 30
@@ -141,7 +141,8 @@ const AdminTestManager = ({ onClose }) => {
                                 value={testData.subject_id}
                                 onChange={(e) => setTestData({ ...testData, subject_id: e.target.value })}
                                 required
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}
+                                disabled={!isAdmin}
+                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', backgroundColor: !isAdmin ? '#f8f9fa' : 'white' }}
                             >
                                 <option value="">Fanni tanlang</option>
                                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
@@ -156,7 +157,8 @@ const AdminTestManager = ({ onClose }) => {
                                 onChange={(e) => setTestData({ ...testData, title: e.target.value })}
                                 placeholder="Masalan: 1-chorak yakuniy testi"
                                 required
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}
+                                disabled={!isAdmin}
+                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', backgroundColor: !isAdmin ? '#f8f9fa' : 'white' }}
                             />
                         </div>
                         <div className="form-group" style={{ marginBottom: '1.5rem' }}>
@@ -167,7 +169,8 @@ const AdminTestManager = ({ onClose }) => {
                                 value={testData.time_limit}
                                 onChange={(e) => setTestData({ ...testData, time_limit: e.target.value })}
                                 required
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}
+                                disabled={!isAdmin}
+                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', backgroundColor: !isAdmin ? '#f8f9fa' : 'white' }}
                             />
                         </div>
                         <div className="form-group" style={{ marginBottom: '2rem' }}>
@@ -176,12 +179,15 @@ const AdminTestManager = ({ onClose }) => {
                                 className="form-control"
                                 value={testData.description}
                                 onChange={(e) => setTestData({ ...testData, description: e.target.value })}
-                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', minHeight: '100px' }}
+                                disabled={!isAdmin}
+                                style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', minHeight: '100px', backgroundColor: !isAdmin ? '#f8f9fa' : 'white' }}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '1rem' }}>
-                            {loading ? 'Yaratilmoqda...' : 'Testni Saqlash'}
-                        </button>
+                        {isAdmin && (
+                            <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '1rem' }}>
+                                {loading ? 'Yaratilmoqda...' : 'Testni Saqlash'}
+                            </button>
+                        )}
                     </form>
                 </div>
             ) : (
@@ -190,16 +196,19 @@ const AdminTestManager = ({ onClose }) => {
                         <div key={qIdx} className="card" style={{ marginBottom: '2rem', padding: '2rem' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                                 <h4 style={{ fontWeight: 700 }}>Savol {qIdx + 1}</h4>
-                                <button onClick={() => setQuestions(questions.filter((_, i) => i !== qIdx))} style={{ color: '#fa5252', background: 'none', border: 'none', cursor: 'pointer' }}>
-                                    <Trash2 size={20} />
-                                </button>
+                                {isAdmin && (
+                                    <button onClick={() => setQuestions(questions.filter((_, i) => i !== qIdx))} style={{ color: '#fa5252', background: 'none', border: 'none', cursor: 'pointer' }}>
+                                        <Trash2 size={20} />
+                                    </button>
+                                )}
                             </div>
 
                             <textarea
                                 placeholder="Savol matnini kiriting..."
                                 value={q.question_text}
                                 onChange={(e) => handleQuestionChange(qIdx, 'question_text', e.target.value)}
-                                style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '1.5rem', minHeight: '80px' }}
+                                disabled={!isAdmin}
+                                style={{ width: '100%', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)', marginBottom: '1.5rem', minHeight: '80px', backgroundColor: !isAdmin ? '#f8f9fa' : 'white' }}
                             />
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -209,13 +218,15 @@ const AdminTestManager = ({ onClose }) => {
                                             type="radio"
                                             checked={opt.is_correct}
                                             onChange={() => handleOptionChange(qIdx, oIdx, 'is_correct', true)}
+                                            disabled={!isAdmin}
                                         />
                                         <input
                                             type="text"
                                             placeholder={`Variant ${oIdx + 1}`}
                                             value={opt.option_text}
                                             onChange={(e) => handleOptionChange(qIdx, oIdx, 'option_text', e.target.value)}
-                                            style={{ flex: 1, border: 'none', background: 'transparent', outline: 'none' }}
+                                            disabled={!isAdmin}
+                                            style={{ flex: 1, border: 'none', background: 'transparent', outline: 'none', color: !isAdmin ? '#6c757d' : 'inherit' }}
                                         />
                                     </div>
                                 ))}
@@ -223,14 +234,16 @@ const AdminTestManager = ({ onClose }) => {
                         </div>
                     ))}
 
-                    <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                        <button className="btn btn-secondary" onClick={addQuestion} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                            <Plus size={20} /> Savol Qo'shish
-                        </button>
-                        <button className="btn btn-primary" onClick={saveQuestions} disabled={loading} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                            <Save size={20} /> {loading ? 'Saqlanmoqda...' : 'Barchasini Saqlash'}
-                        </button>
-                    </div>
+                    {isAdmin && (
+                        <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                            <button className="btn btn-secondary" onClick={addQuestion} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                <Plus size={20} /> Savol Qo'shish
+                            </button>
+                            <button className="btn btn-primary" onClick={saveQuestions} disabled={loading} style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                                <Save size={20} /> {loading ? 'Saqlanmoqda...' : 'Barchasini Saqlash'}
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
