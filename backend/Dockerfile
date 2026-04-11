@@ -13,6 +13,8 @@ RUN a2enmod rewrite
 ENV APACHE_DOCUMENT_ROOT /var/www/html
 
 COPY . /var/www/html/
+COPY uploads.ini /usr/local/etc/php/conf.d/
+
 
 # Update permissions
 RUN chown -R www-data:www-data /var/www/html/ \

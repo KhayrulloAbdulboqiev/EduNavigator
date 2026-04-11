@@ -13,8 +13,8 @@ import OnlineEducation from './pages/OnlineEducation';
 import Library from './pages/Library';
 import Rating from './pages/Rating';
 import Certificate from './pages/Certificate';
+import Directors from './pages/Directors';
 
-// Placeholder Pages for all menu items
 const PlaceholderPage = ({ title }) => (
   <div>
     <h2 style={{ marginBottom: '1.5rem' }}>{title}</h2>
@@ -35,7 +35,6 @@ function App() {
           <ProtectedRoute><MainLayout><Dashboard /></MainLayout></ProtectedRoute>
         } />
 
-        {/* All Sidebar Routes */}
         <Route path="/schedule" element={<ProtectedRoute><MainLayout><Schedule /></MainLayout></ProtectedRoute>} />
         <Route path="/online-education" element={<ProtectedRoute><MainLayout><OnlineEducation /></MainLayout></ProtectedRoute>} />
         <Route path="/tests" element={<ProtectedRoute><MainLayout><Tests /></MainLayout></ProtectedRoute>} />
@@ -43,8 +42,8 @@ function App() {
         <Route path="/rating" element={<ProtectedRoute><MainLayout><Rating /></MainLayout></ProtectedRoute>} />
         <Route path="/library" element={<ProtectedRoute><MainLayout><Library /></MainLayout></ProtectedRoute>} />
         <Route path="/certificates" element={<ProtectedRoute><MainLayout><Certificate /></MainLayout></ProtectedRoute>} />
-        <Route path="/market" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Market" /></MainLayout></ProtectedRoute>} />
-        <Route path="/share" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Do'stlarga ulashish" /></MainLayout></ProtectedRoute>} />
+        <Route path="/directors" element={<ProtectedRoute><MainLayout><Directors /></MainLayout></ProtectedRoute>} />
+        {/* <Route path="/share" element={<ProtectedRoute><MainLayout><PlaceholderPage title="Do'stlarga ulashish" /></MainLayout></ProtectedRoute>} /> */}
         <Route path="/settings" element={<ProtectedRoute><MainLayout><Settings /></MainLayout></ProtectedRoute>} />
       </Routes>
     </Router>

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Calendar, MonitorPlay, BookOpen, Map,
-    Trophy, BookMarked, Award, ShoppingBag,
+    Trophy, BookMarked, Award, User,
     Share2, Settings
 } from 'lucide-react';
 
@@ -15,8 +15,8 @@ const menuItems = [
     { path: '/rating', name: 'Reyting', icon: Trophy },
     { path: '/library', name: 'Kutubxona', icon: BookMarked },
     { path: '/certificates', name: 'Xalqaro sertifikatlar', icon: Award },
-    { path: '/market', name: 'Market', icon: ShoppingBag },
-    { path: '/share', name: 'Do\'stlarga ulashish', icon: Share2 },
+    { path: '/directors', name: 'Rahbariyat', icon: User },
+    // { path: '/share', name: 'Do\'stlarga ulashish', icon: Share2 },
     { path: '/settings', name: 'Sozlamalar', icon: Settings },
 ];
 
